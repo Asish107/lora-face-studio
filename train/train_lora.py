@@ -144,13 +144,18 @@ def run_training(
 
     print(f"\n[train] Launching:\n  {' '.join(cmd)}\n")
     
+    # Inject sd-scripts directory into PYTHONPATH so it can find its libraries
+    env = os.environ.copy()
+    env["PYTHONPATH"] = f"{script.parent}:{env.get('PYTHONPATH', '')}"
+    
     # Use subprocess.Popen to stream output in real-time
     process = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
-        bufsize=1
+        bufsize=1,
+        env=env
     )
     
     for line in process.stdout:
