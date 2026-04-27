@@ -30,8 +30,8 @@ lr_warmup_steps:            50
 lr_scheduler_num_cycles:    3
 
 # ── Optimiser ─────────────────────────────────────────────────────────────────
-optimizer_type:   "AdamW8bit"           # bitsandbytes 8-bit: saves ~40% VRAM
-mixed_precision:  "fp16"                # bf16 if on A100
+optimizer_type:   "AdamW"               # Safer than 8bit for initial testing
+mixed_precision:  "fp16"
 save_precision:   "fp16"
 
 # ── LoRA network ─────────────────────────────────────────────────────────────
@@ -59,7 +59,7 @@ min_snr_gamma:      5.0                 # loss weighting — stabilises training
 
 # ── Memory / speed ───────────────────────────────────────────────────────────
 gradient_checkpointing: true
-xformers:               true            # install xformers for ~20% speedup
+xformers:               false           # Disable for higher stability on T4
 cache_latents:          true            # pre-encode images once — saves time
 cache_latents_to_disk:  false
 

@@ -130,7 +130,8 @@ def main():
         f"--data_dir {data_dir} "
         f"--output {output_dir} "
         f"--epochs {args.epochs} "
-        f"--dim {args.dim}"
+        f"--dim {args.dim} "
+        f"--no-accelerate"
     )
 
     print(f"\n✓  All done! LoRA saved to: {output_dir}")
