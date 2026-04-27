@@ -43,8 +43,8 @@ def install_deps() -> None:
     if not os.path.exists("sd-scripts"):
         run("git clone --depth 1 https://github.com/kohya-ss/sd-scripts.git")
         # Fix the problematic local reference in sd-scripts requirements
-        run("sed -i 's/^\.\///g' sd-scripts/requirements.txt || true")
-        run("sed -i '/^-e \./d' sd-scripts/requirements.txt || true")
+        run(r"sed -i 's/^\.\///g' sd-scripts/requirements.txt || true")
+        run(r"sed -i '/^-e \./d' sd-scripts/requirements.txt || true")
         run(f"{sys.executable} -m pip install -q -r sd-scripts/requirements.txt")
 
 
@@ -108,7 +108,9 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     # ── Upload images ────────────────────────────────────────────────────
-    upload_images_colab(raw_dir)
+    # upload_images_colab(raw_dir)
+    # Note: Automated upload picker fails in script mode. 
+    # Please upload your images to: Google Drive > LoRaFaceStudio > raw_images
 
     # ── Dataset prep ─────────────────────────────────────────────────────
     run(
