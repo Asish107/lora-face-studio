@@ -129,21 +129,36 @@ def run_training(
     config:     str,
     accelerate: bool = True,
 ) -> None:
+    # Use absolute path for config to avoid any relative path confusion
+    abs_config = os.path.abspath(config)
+    
     if accelerate:
         cmd = [
             "accelerate", "launch",
             "--num_cpu_threads_per_process", "2",
             str(script),
-            "--config_file", config,
+            "--config_file", abs_config,
         ]
     else:
-        # Fallback for Mac MPS or CPU-only
-        cmd = [sys.executable, str(script), "--config_file", config]
+        cmd = [sys.executable, str(script), "--config_file", abs_config]
 
     print(f"\n[train] Launching:\n  {' '.join(cmd)}\n")
-    result = subprocess.run(cmd)
-    if result.returncode != 0:
-        raise RuntimeError(f"Training exited with code {result.returncode}")
+    
+    # Use subprocess.Popen to stream output in real-time
+    process = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1
+    )
+    
+    for line in process.stdout:
+        print(line, end="")
+        
+    process.wait()
+    if process.returncode != 0:
+        raise RuntimeError(f"Training exited with code {process.returncode}")
 
 
 # ─────────────────────────────────────────────
@@ -206,6 +221,10 @@ def main():
 
     patched_config = patch_config(args.config, overrides)
     print(f"[train] Config  : {patched_config}")
+    with open(patched_config, "r") as f:
+        print("─── PATCHED CONFIG ───")
+        print(f.read())
+        print("──────────────────────")
 
     # ── Step 4: run training ─────────────────────────────────────────────
     run_training(script, patched_config, accelerate=not args.no_accelerate)
