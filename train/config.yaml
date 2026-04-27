@@ -1,0 +1,78 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# config.yaml  —  SDXL LoRA training config for kohya-ss sd-scripts
+# Optimised for: 15–25 face images, T4/A100 Colab GPU, identity preservation
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Paths (fill in before training) ──────────────────────────────────────────
+pretrained_model_name_or_path: "stabilityai/stable-diffusion-xl-base-1.0"
+train_data_dir:   "./data/dataset"       # parent of <repeats>_<name>/ folder
+output_dir:       "./output/lora"
+output_name:      "person_lora"          # final file: person_lora.safetensors
+logging_dir:      "./logs"
+
+# ── Image resolution ──────────────────────────────────────────────────────────
+resolution:             "1024,1024"
+enable_bucket:          true
+min_bucket_reso:        768
+max_bucket_reso:        1280
+bucket_reso_steps:      64
+bucket_no_upscale:      false
+
+# ── Training hyperparameters ──────────────────────────────────────────────────
+max_train_epochs:           30          # 20–30 sweet spot for 15–25 images
+train_batch_size:           1           # increase to 2 if VRAM > 20 GB
+gradient_accumulation_steps: 4
+learning_rate:              1e-4
+unet_lr:                    1e-4
+text_encoder_lr:            5e-5        # slower LR for text encoder
+lr_scheduler:               "cosine_with_restarts"
+lr_warmup_steps:            50
+lr_scheduler_num_cycles:    3
+
+# ── Optimiser ─────────────────────────────────────────────────────────────────
+optimizer_type:   "AdamW8bit"           # bitsandbytes 8-bit: saves ~40% VRAM
+mixed_precision:  "fp16"                # bf16 if on A100
+save_precision:   "fp16"
+
+# ── LoRA network ─────────────────────────────────────────────────────────────
+network_module:   "networks.lora"
+network_dim:      32                    # rank — 16 fast, 32 better quality
+network_alpha:    16                    # alpha = dim/2 is a safe default
+# Uncomment to target only attn layers (faster, slightly less identity fidelity)
+# network_args:
+#   - "conv_dim=4"
+#   - "conv_alpha=2"
+
+# ── Caption & regularisation ─────────────────────────────────────────────────
+caption_extension: ".txt"
+shuffle_caption:   true
+keep_tokens:       1                    # keep trigger word first
+color_aug:         false                # keep false — preserves skin tone
+flip_aug:          true
+random_crop:       false
+
+# ── Noise / diffusion ────────────────────────────────────────────────────────
+noise_offset:       0.0357              # improves dark/bright exposure range
+multires_noise_iterations: 6
+multires_noise_discount:   0.3
+min_snr_gamma:      5.0                 # loss weighting — stabilises training
+
+# ── Memory / speed ───────────────────────────────────────────────────────────
+gradient_checkpointing: true
+xformers:               true            # install xformers for ~20% speedup
+cache_latents:          true            # pre-encode images once — saves time
+cache_latents_to_disk:  false
+
+# ── Checkpointing ────────────────────────────────────────────────────────────
+save_every_n_epochs: 5
+save_last_n_epochs:  3
+save_model_as:       "safetensors"
+
+# ── Logging ──────────────────────────────────────────────────────────────────
+log_with:        "tensorboard"
+log_prefix:      "face_lora"
+
+# ── Sampling during training (visual quality check) ──────────────────────────
+sample_every_n_epochs:   5
+sample_prompts:          "./train/sample_prompts.txt"
+sample_sampler:          "euler_a"

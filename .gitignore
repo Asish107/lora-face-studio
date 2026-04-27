@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Model files (large — store in Drive or S3)
+*.safetensors
+*.ckpt
+*.pt
+*.bin
+
+# Data
+data/raw_images/
+data/outputs/
+data/dataset/
+
+# Training
+output/
+logs/
+*.patched.yaml
+sd-scripts/
+
+# Env
+.env
+*.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

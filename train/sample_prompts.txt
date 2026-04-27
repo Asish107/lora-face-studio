@@ -1,0 +1,8 @@
+# sample_prompts.txt
+# These prompts are used by kohya-ss to generate preview images
+# during training so you can monitor identity preservation.
+# Replace TRIGGER_WORD with your actual trigger word.
+
+portrait of TRIGGER_WORD, same person, consistent face, wearing a white shirt, natural park setting, golden hour lighting, natural skin texture, subtle asymmetry, 85mm lens, shallow depth of field
+portrait of TRIGGER_WORD, same person, consistent face, business casual outfit, modern office interior, soft window light, realistic imperfections, cinematic, highly detailed
+portrait of TRIGGER_WORD, same person, consistent face, casual street clothes, urban street, overcast light, photorealistic, natural skin pores, slight stubble detail

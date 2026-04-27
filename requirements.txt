@@ -1,0 +1,49 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# requirements.txt
+# SDXL LoRA Face Studio
+# Python 3.10+  |  CUDA 11.8+ recommended  |  Mac MPS supported
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Core ML ──────────────────────────────────────────────────────────────────
+torch>=2.1.0
+torchvision>=0.16.0
+# Install with CUDA: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+
+# ── Diffusers ecosystem ───────────────────────────────────────────────────────
+diffusers[torch]>=0.27.0
+transformers>=4.38.0
+accelerate>=0.27.0
+safetensors>=0.4.2
+peft>=0.9.0          # PEFT LoRA utilities (used by diffusers internally)
+
+# ── Memory optimisation (CUDA only — skip on Mac) ─────────────────────────────
+# bitsandbytes>=0.43.0
+# xformers>=0.0.24
+
+# ── Dataset preparation ───────────────────────────────────────────────────────
+Pillow>=10.2.0
+opencv-python-headless>=4.9.0
+numpy>=1.26.0
+
+# ── Auto-captioning (optional — BLIP) ────────────────────────────────────────
+# Uncomment if you want BLIP auto-captions instead of template captions:
+# Salesforce-BLIP is included via transformers above
+
+# ── API & UI ──────────────────────────────────────────────────────────────────
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.9
+pydantic>=2.0.0
+
+# ── Config & utilities ────────────────────────────────────────────────────────
+pyyaml>=6.0.1
+tqdm>=4.66.0
+
+# ── TensorBoard (training visualisation) ─────────────────────────────────────
+tensorboard>=2.16.0
+
+# ── Mac-specific notes ────────────────────────────────────────────────────────
+# On Apple Silicon (M1/M2/M3):
+#   pip install torch torchvision          (MPS backend included)
+#   Skip bitsandbytes and xformers
+#   Set LOW_VRAM=1 for sequential CPU offload if needed
