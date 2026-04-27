@@ -123,6 +123,10 @@ def main():
         f"--no-crop"    # If face detection fails, use the whole image instead of skipping
     )
 
+    # ── Heartbeat Check ──────────────────────────────────────────────────
+    print("\n── Library Heartbeat Check ──────────────────────────────────")
+    run(f"export PYTHONPATH={os.path.join(os.getcwd(), 'sd-scripts')}:$PYTHONPATH && {sys.executable} sd-scripts/sdxl_train_network.py --help | head -n 5")
+
     # ── Training ─────────────────────────────────────────────────────────
     run(
         f"{sys.executable} train/train_lora.py "
