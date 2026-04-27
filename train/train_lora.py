@@ -105,9 +105,9 @@ def validate_dataset(data_dir: str, trigger: str) -> None:
     for d in concept_dirs:
         images += list(d.glob("*.png")) + list(d.glob("*.jpg"))
 
-    if len(images) < 5:
+    if len(images) < 3:
         raise ValueError(
-            f"Only {len(images)} images found — need at least 5 for stable training."
+            f"Only {len(images)} images found — need at least 3 for stable training."
         )
 
     # Check captions exist

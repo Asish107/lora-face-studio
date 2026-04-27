@@ -119,7 +119,8 @@ def main():
         f"--output {data_dir} "
         f"--trigger {args.trigger} "
         f"--name {person_name} "
-        f"--no-caption"    # fast mode — use template captions
+        f"--no-caption "
+        f"--no-crop"    # If face detection fails, use the whole image instead of skipping
     )
 
     # ── Training ─────────────────────────────────────────────────────────
