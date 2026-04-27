@@ -144,9 +144,13 @@ def run_training(
 
     print(f"\n[train] Launching:\n  {' '.join(cmd)}\n")
     
-    # Inject sd-scripts directory into PYTHONPATH so it can find its libraries
+    # GPU PEACE PROTOCOL: Silence TensorFlow to prevent CUDA conflicts
     env = os.environ.copy()
     env["PYTHONPATH"] = f"{script.parent}:{env.get('PYTHONPATH', '')}"
+    env["TF_CPP_MIN_LOG_LEVEL"] = "3"
+    env["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    # Force TensorFlow to CPU so it doesn't fight PyTorch for the GPU
+    env["CUDA_VISIBLE_DEVICES"] = "0" 
     
     # Use subprocess.Popen to stream output in real-time
     process = subprocess.Popen(

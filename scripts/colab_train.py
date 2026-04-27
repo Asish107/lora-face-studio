@@ -125,7 +125,7 @@ def main():
 
     # ── Heartbeat Check ──────────────────────────────────────────────────
     print("\n── Library Heartbeat Check ──────────────────────────────────")
-    run(f"export PYTHONPATH={os.path.join(os.getcwd(), 'sd-scripts')}:$PYTHONPATH && {sys.executable} sd-scripts/sdxl_train_network.py --help | head -n 5")
+    run(f"export TF_CPP_MIN_LOG_LEVEL=3 && export PYTHONPATH={os.path.join(os.getcwd(), 'sd-scripts')}:$PYTHONPATH && {sys.executable} sd-scripts/sdxl_train_network.py --help | head -n 1")
 
     # ── Training ─────────────────────────────────────────────────────────
     run(
