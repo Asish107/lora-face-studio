@@ -42,21 +42,29 @@ def install_deps() -> None:
     # kohya-ss sd-scripts
     if not os.path.exists("sd-scripts"):
         run("git clone --depth 1 https://github.com/kohya-ss/sd-scripts.git")
+        # Fix the problematic local reference in sd-scripts requirements
+        run("sed -i 's/^\.\///g' sd-scripts/requirements.txt || true")
+        run("sed -i '/^-e \./d' sd-scripts/requirements.txt || true")
         run(f"{sys.executable} -m pip install -q -r sd-scripts/requirements.txt")
 
 
 def mount_drive(drive_folder: str) -> str:
     """Mount Google Drive and return the upload folder path."""
-    try:
-        from google.colab import drive
-        drive.mount("/content/drive")
-        folder = f"/content/drive/MyDrive/{drive_folder}"
-        os.makedirs(folder, exist_ok=True)
-        print(f"Drive mounted. Working folder: {folder}")
-        return folder
-    except ImportError:
-        print("Not running in Colab — skipping Drive mount")
-        return "."
+    drive_path = "/content/drive"
+    if os.path.exists(drive_path):
+        print("✓ Google Drive already mounted.")
+    else:
+        try:
+            from google.colab import drive
+            drive.mount(drive_path)
+        except Exception as e:
+            print(f"Warning: Could not mount drive automatically: {e}")
+            print("Please mount Drive manually using the folder icon on the left.")
+
+    folder = f"/content/drive/MyDrive/{drive_folder}"
+    os.makedirs(folder, exist_ok=True)
+    print(f"Working folder: {folder}")
+    return folder
 
 
 def upload_images_colab(dest: str) -> None:
