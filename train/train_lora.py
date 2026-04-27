@@ -218,9 +218,10 @@ def main():
     # ── Step 3: patch config ─────────────────────────────────────────────
     os.makedirs(args.output, exist_ok=True)
     overrides = {
-        "train_data_dir": args.data_dir,
-        "output_dir":     args.output,
+        "train_data_dir": os.path.abspath(args.data_dir),
+        "output_dir":     os.path.abspath(args.output),
         "output_name":    f"{args.trigger}_lora",
+        "sample_prompts": str(Path(args.config).parent.resolve() / "sample_prompts.txt")
     }
     if args.model:   overrides["pretrained_model_name_or_path"] = args.model
     if args.epochs:  overrides["max_train_epochs"] = args.epochs
